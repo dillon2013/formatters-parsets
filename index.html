@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+
+    </head>
+    <body ng-app="app">
+        <h1>HELLO!</h1>
+        <form name="currencyForm">
+            <input currency-converter type="text" placeholder="insert here" ng-model="amount" />
+            <p>{{amount}}</p>
+	</form>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script>
+        angular.module('app',[]).directive('currencyConverter', function ($timeout, $filter) {
+            return {
+                require: 'ngModel',
+                restrict: 'A',
+                link : function(scope, elem, attrs, ctrl){
+
+                    elem.on('blur', function () {
+                        var upper = toUpper(ctrl.$viewValue);
+                        var number = parseFloat(ctrl.$viewValue, 10);
+
+                        ctrl.$setViewValue(upper);
+                        ctrl.$render();
+                        console.log(ctrl.$modelValue);
+                    });
+
+                    elem.on('focus', function () {
+                       var lower = toLower(ctrl.$viewValue);
+                        ctrl.$setViewValue(lower);
+                        ctrl.$render();
+                        console.log(ctrl.$modelValue);
+                    });
+
+                    function toUpper(value){
+                        return value  ? value.toUpperCase() : undefined;
+                    }
+
+                    function toLower(value){
+                        return value ? value.toLowerCase() : undefined;
+                    }
+
+                    function reverse(s){
+                        console.log('reverse baby');
+                        return s ? s.split("").reverse().join("") : undefined;
+                    }
+
+                    ctrl.$parsers.push(toLower);
+                    ctrl.$formatters.push(reverse);
+
+                    console.log(scope);
+
+                    $timeout(function () {
+//                        ctrl.$modelValue = 'dillon';
+                        scope.amount = 'dillon';
+//                        ctrl.$render();
+                        console.log('model updated');
+                    }, 5000);
+                }
+            }
+        });
+    </script>
+    </body>
+</html>
